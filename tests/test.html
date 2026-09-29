@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Testes rápidos — UniScheduler</title>
+  </head>
+  <body>
+    <h1>Testes rápidos dos algoritmos</h1>
+    <pre id="output"></pre>
+    <script src="../js/algorithms.js"></script>
+    <script>
+      const output = [];
+      function test(name, condition) {
+        output.push(`${condition ? "✓" : "✗"} ${name}`);
+      }
+
+      const item = (name, start, end) => ({ name, start, end });
+      const partitioning = intervalPartitioning([
+        item("A", "08:00", "10:00"),
+        item("B", "08:30", "09:00"),
+        item("C", "09:00", "11:00"),
+      ]);
+      test("Partitioning encontra duas salas", partitioning.rooms.length === 2);
+      test("Partitioning aceita lista vazia", intervalPartitioning([]).rooms.length === 0);
+
+      const peak = peakConcurrency([
+        item("A", "08:00", "09:00"),
+        item("B", "09:00", "10:00"),
+      ]);
+      test("O pico não conta intervalos adjacentes como simultâneos", peak.count === 1);
+      document.querySelector("#output").textContent = output.join("\n");
+      if (output.some((line) => line.startsWith("✗"))) {
+        document.body.dataset.result = "fail";
+      }
+    </script>
+  </body>
+</html>
