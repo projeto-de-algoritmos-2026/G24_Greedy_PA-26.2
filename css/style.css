@@ -1,0 +1,589 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  margin: 0;
+  color: #17242d;
+  background: #f7f5ef;
+  font: 15px system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+aside {
+  position: fixed;
+  inset: 0 auto 0 0;
+  display: flex;
+  width: 245px;
+  flex-direction: column;
+  padding: 28px 16px;
+  border-right: 1px solid #ddd8cd;
+  background: #f0ede4;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0 10px 30px;
+}
+
+.brand b {
+  font: 700 24px Georgia, serif;
+}
+
+.brand small,
+nav small {
+  display: block;
+  color: #697078;
+  font-size: 12px;
+}
+
+.brand > div:last-child {
+  min-width: 0;
+}
+
+.logo {
+  display: grid;
+  width: 38px;
+  height: 44px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 2px solid #194e45;
+  color: #194e45;
+  font: 700 22px Georgia, serif;
+}
+
+nav {
+  display: grid;
+  gap: 8px;
+}
+
+nav button {
+  padding: 14px;
+  border: 0;
+  border-radius: 8px;
+  color: #25323a;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+nav button.active,
+nav button:hover {
+  color: white;
+  background: #174f45;
+}
+
+nav button.active small,
+nav button:hover small {
+  color: #dce9e5;
+}
+
+main {
+  width: calc(100% - 245px);
+  margin-left: 245px;
+}
+
+header {
+  display: flex;
+  height: 58px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 38px;
+  border-bottom: 1px solid #e2ded5;
+  color: #697078;
+  font-size: 13px;
+}
+
+#app {
+  max-width: 1320px;
+  margin: auto;
+  padding: 38px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font: 700 42px Georgia, serif;
+}
+
+h2 {
+  margin: 0;
+  font: 700 21px Georgia, serif;
+}
+
+.lead {
+  margin: 0 0 28px;
+  color: #66707b;
+  font-size: 17px;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  padding: 22px;
+  border: 1px solid #e1ddd4;
+  border-radius: 12px;
+  background: #fffdf9;
+  box-shadow: 0 2px 10px #20352a0a;
+}
+
+.choice {
+  display: flex;
+  min-height: 245px;
+  flex-direction: column;
+}
+
+.choice p {
+  color: #697078;
+  line-height: 1.6;
+}
+
+.tag {
+  margin-top: auto;
+  color: #174f45;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btn {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 7px;
+  color: white;
+  background: #174f45;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  border: 1px solid #b8c7c2;
+  color: #174f45;
+  background: white;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #ebe7df;
+  text-align: left;
+}
+
+.table th {
+  color: #68717a;
+  font-size: 12px;
+}
+
+.table input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd8cf;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+/* Disciplina ocupa o espaço livre; horários e botão ficam com largura fixa. */
+.table td:first-child input {
+  min-width: 170px;
+}
+
+.table td:nth-child(2),
+.table td:nth-child(3),
+.table td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.table input[type="time"] {
+  min-width: 110px;
+}
+
+.table tr.invalid-row input {
+  border-color: #bd4c3f;
+  background: #fff8f5;
+}
+
+.work {
+  display: grid;
+  grid-template-columns: minmax(0, 2.3fr) minmax(260px, 0.8fr);
+  gap: 18px;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.action p {
+  color: #697078;
+  line-height: 1.5;
+}
+
+.result {
+  margin-top: 18px;
+}
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.metric {
+  min-width: 130px;
+  padding: 11px 15px;
+  border: 1px solid #e3ded5;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.metric b {
+  display: block;
+  font-size: 22px;
+}
+
+.timeline {
+  overflow-x: auto;
+  padding-top: 10px;
+}
+
+.axis,
+.room,
+.schedule-row {
+  display: flex;
+  min-width: 805px;
+}
+
+.axis {
+  align-items: flex-end;
+}
+
+.axis-label {
+  width: var(--label-width);
+  flex: 0 0 var(--label-width);
+}
+
+.axis-track {
+  position: relative;
+  height: 20px;
+  flex: 1;
+  color: #697078;
+  font-size: 11px;
+}
+
+.axis-track span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* O último rótulo fica alinhado à borda direita para não ser cortado. */
+.axis-track span:last-child {
+  transform: translateX(-100%);
+}
+
+.room,
+.schedule-row {
+  min-height: 65px;
+  border-top: 1px solid #eee8df;
+}
+
+.roomname {
+  width: 105px;
+  flex: 0 0 105px;
+  padding: 20px 10px;
+  font: 700 15px Georgia, serif;
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent calc(12.5% - 1px),
+    #eee8df calc(12.5% - 1px),
+    #eee8df 12.5%
+  );
+}
+
+.event {
+  position: absolute;
+  top: 10px;
+  overflow: hidden;
+  height: 44px;
+  padding: 7px 9px;
+  border-left: 4px solid #5aa45d;
+  border-radius: 5px;
+  background: #dbe9d1;
+  font-size: 12px;
+}
+
+.event b {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-time {
+  display: block;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.room .event:nth-child(2n) {
+  border-color: #6d9fe4;
+  background: #dce8f7;
+}
+
+.room .event:nth-child(3n) {
+  border-color: #d49a35;
+  background: #f5e5bd;
+}
+
+.schedule-label {
+  display: flex;
+  width: 190px;
+  flex: 0 0 190px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
+.schedule-label span {
+  font-weight: 700;
+}
+
+.schedule-label b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.schedule-row.is-selected .schedule-label span {
+  color: #267344;
+}
+
+.schedule-row.is-selected .event {
+  border-color: #5aa45d;
+  background: #dbe9d1;
+}
+
+.schedule-row.is-rejected .schedule-label span {
+  color: #6c7379;
+}
+
+.schedule-row.is-rejected .event {
+  border-color: #899198;
+  background: #e5e7e8;
+}
+
+.note {
+  margin-top: 16px;
+  padding: 15px;
+  border: 1px solid #d4e4d7;
+  border-radius: 8px;
+  background: #eef5ef;
+}
+
+.result details {
+  margin-top: 14px;
+}
+
+.result summary {
+  cursor: pointer;
+}
+
+.steps {
+  max-height: 260px;
+  overflow: auto;
+}
+
+.step {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee8df;
+  color: #56616a;
+}
+
+.empty-state {
+  padding: 18px;
+  color: #737a80;
+}
+
+.validation-message {
+  border-color: #e7c1b8;
+  background: #fff8f5;
+}
+
+.validation-message ul {
+  margin-bottom: 0;
+  padding-left: 22px;
+  color: #8e3326;
+}
+
+@media (max-width: 1100px) {
+  .work {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 850px) {
+  body {
+    display: block;
+  }
+
+  aside {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    padding: 14px 18px;
+    border-right: 0;
+    border-bottom: 1px solid #ddd8cd;
+  }
+
+  .brand {
+    margin: 0 0 14px;
+  }
+
+  .brand b {
+    font-size: 21px;
+  }
+
+  nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  nav button {
+    min-width: 0;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  nav button small {
+    font-size: 11px;
+  }
+
+  main {
+    width: 100%;
+    margin: 0;
+  }
+
+  header {
+    height: auto;
+    min-height: 48px;
+    justify-content: flex-start;
+    padding: 10px 22px;
+  }
+
+  #app {
+    padding: 22px;
+  }
+
+  .grid2,
+  .work {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 480px) {
+  aside {
+    padding: 12px;
+  }
+
+  .brand {
+    gap: 9px;
+    margin-bottom: 10px;
+  }
+
+  .brand .logo {
+    display: none;
+  }
+
+  .brand b {
+    font-size: clamp(16px, 5vw, 19px);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .brand small {
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  nav button {
+    padding: 9px 7px;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+
+  nav button small {
+    font-size: 10px;
+  }
+
+  #app {
+    padding: 18px;
+  }
+
+  h1 {
+    font-size: 29px;
+  }
+
+  .card {
+    padding: 17px;
+  }
+
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 5px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  nav {
+    grid-template-columns: 1fr;
+  }
+
+  nav button {
+    padding: 9px 10px;
+  }
+}
