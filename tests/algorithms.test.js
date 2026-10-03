@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const {
   intervalPartitioning,
+  intervalScheduling,
   peakConcurrency,
   validateItems,
 } = require("../js/algorithms.js");
@@ -19,6 +20,7 @@ function bruteForceRoomCount(items) {
     (a, b) => a.start.localeCompare(b.start) || a.end.localeCompare(b.end),
   );
   let best = items.length;
+
 
   function assign(index, roomEnds) {
     if (index === sorted.length) {
@@ -54,6 +56,29 @@ function bruteForceRoomCount(items) {
   return best;
 }
 
+function bruteForceScheduleCount(items) {
+  let best = 0;
+  for (let mask = 0; mask < 1 << items.length; mask += 1) {
+    const chosen = items.filter((_, index) => mask & (1 << index));
+    if (chosen.length <= best) continue;
+
+    let compatible = true;
+    for (let left = 0; left < chosen.length && compatible; left += 1) {
+      for (let right = left + 1; right < chosen.length; right += 1) {
+        if (
+          chosen[left].start < chosen[right].end &&
+          chosen[right].start < chosen[left].end
+        ) {
+          compatible = false;
+          break;
+        }
+      }
+    }
+    if (compatible) best = chosen.length;
+  }
+  return best;
+}
+
 test("casos de borda do Partitioning", () => {
   assert.equal(intervalPartitioning([]).rooms.length, 0);
   assert.equal(
@@ -74,6 +99,29 @@ test("casos de borda do Partitioning", () => {
       interval("C", 480, 540),
     ]).rooms.length,
     3,
+  );
+});
+
+test("casos de borda do Scheduling", () => {
+  assert.equal(intervalScheduling([]).selected.length, 0);
+  assert.equal(
+    intervalScheduling([interval("única", 480, 540)]).selected.length,
+    1,
+  );
+  assert.equal(
+    intervalScheduling([
+      interval("A", 480, 540),
+      interval("B", 540, 600),
+    ]).selected.length,
+    2,
+  );
+  assert.equal(
+    intervalScheduling([
+      interval("A", 480, 540),
+      interval("B", 480, 540),
+      interval("C", 480, 540),
+    ]).selected.length,
+    1,
   );
 });
 
@@ -105,7 +153,7 @@ test("validação aponta linha e impede horários em branco ou inválidos", () =
   );
 });
 
-test("Partitioning coincide com busca exaustiva em entradas aleatórias", () => {
+test("Partitioning e Scheduling coincidem com busca exaustiva em entradas aleatórias", () => {
   let seed = 20261005;
   const random = (maximum) => {
     seed = (seed * 1664525 + 1013904223) % 4294967296;
@@ -129,6 +177,11 @@ test("Partitioning coincide com busca exaustiva em entradas aleatórias", () => 
       intervalPartitioning(items).rooms.length,
       peakConcurrency(items).count,
       `Certificado de simultaneidade divergiu na amostra ${sample}`,
+    );
+    assert.equal(
+      intervalScheduling(items).selected.length,
+      bruteForceScheduleCount(items),
+      `Scheduling divergiu na amostra ${sample}`,
     );
   }
 });

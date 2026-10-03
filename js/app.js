@@ -6,6 +6,15 @@ const examples = {
     { name: "Engenharia de Software", start: "09:50", end: "11:30" },
     { name: "Inteligência Artificial", start: "10:20", end: "12:00" },
   ],
+  scheduling: [
+    { name: "Visão Computacional", start: "08:00", end: "10:00" },
+    { name: "Machine Learning", start: "08:30", end: "09:30" },
+    { name: "Robótica", start: "09:30", end: "11:00" },
+    { name: "Deep Learning", start: "10:00", end: "11:00" },
+    { name: "Ciência de Dados", start: "11:00", end: "12:00" },
+    { name: "NLP", start: "12:00", end: "13:30" },
+    { name: "Sistemas Inteligentes", start: "13:30", end: "15:00" },
+  ],
 };
 
 const STORAGE_KEY = "unischeduler-data-v1";
@@ -15,19 +24,22 @@ function loadData() {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (
       saved &&
-      Array.isArray(saved.partition) &&
-      saved.partition.every(
-        (item) =>
-          item &&
-          typeof item.name === "string" &&
-          typeof item.start === "string" &&
-          typeof item.end === "string",
+      ["partition", "scheduling"].every(
+        (type) =>
+          Array.isArray(saved[type]) &&
+          saved[type].every(
+            (item) =>
+              item &&
+              typeof item.name === "string" &&
+              typeof item.start === "string" &&
+              typeof item.end === "string",
+          ),
       )
     ) {
-      return { partition: saved.partition };
+      return saved;
     }
   } catch {
-    // Storage can be unavailable or contain invalid JSON; use the examples.
+// Storage can be unavailable or contain invalid JSON; use the examples.
   }
   return structuredClone(examples);
 }
@@ -73,6 +85,12 @@ function home() {
         <span class="tag">INTERVAL PARTITIONING</span><br>
         <button class="btn" onclick="go('partition')">Alocar aulas →</button>
       </div>
+      <div class="card choice">
+        <h2>Laboratório compartilhado</h2>
+        <p>Existe apenas um laboratório disponível. Selecione o maior número possível de solicitações sem sobreposição.</p>
+        <span class="tag">INTERVAL SCHEDULING</span><br>
+        <button class="btn" onclick="go('scheduling')">Otimizar agenda →</button>
+      </div>
     </div>`;
 }
 
@@ -104,9 +122,14 @@ function rows(type) {
 }
 
 function moduleView(type) {
+  const partition = type === "partition";
   app.innerHTML = `
-    <h1>Alocação de Salas</h1>
-    <p class="lead">Todas as aulas precisam acontecer. Encontre o menor número de salas necessário.</p>
+    <h1>${partition ? "Alocação de Salas" : "Laboratório Compartilhado"}</h1>
+    <p class="lead">${
+      partition
+        ? "Todas as aulas precisam acontecer. Encontre o menor número de salas necessário."
+        : "Existe apenas um laboratório. Selecione o maior número possível de aulas sem conflitos."
+    }</p>
     <div class="work">
       <div class="card">
         <div class="toolbar">
@@ -125,8 +148,14 @@ function moduleView(type) {
       </div>
       <div class="card action">
         <h2>Executar algoritmo</h2>
-        <p>O Interval Partitioning aloca todas as aulas com o menor número de salas.</p>
-        <button class="btn" onclick="run('partition')">▶ Encontrar alocação ótima</button>
+        <p>${
+          partition
+            ? "O Interval Partitioning aloca todas as aulas com o menor número de salas."
+            : "O Interval Scheduling prioriza o horário de término para maximizar as aulas atendidas."
+        }</p>
+        <button class="btn" onclick="run('${type}')">▶ ${
+          partition ? "Encontrar alocação ótima" : "Maximizar atendimentos"
+        }</button>
       </div>
     </div>
     <div id="result" aria-live="polite"></div>`;
@@ -181,6 +210,8 @@ function run(type) {
   }
 
   if (type === "partition") showPartition();
+  else showScheduling();
+
 }
 
 function timelineScale(items) {
@@ -272,16 +303,60 @@ function showPartition() {
     </div>`;
 }
 
+function showScheduling() {
+  const result = intervalScheduling(data.scheduling);
+  const scale = timelineScale(data.scheduling);
+  const ordered = [
+    ...result.selected.map((item) => ({ ...item, selected: true })),
+    ...result.rejected.map((item) => ({ ...item, selected: false })),
+  ].sort((a, b) => mins(a.start) - mins(b.start) || mins(a.end) - mins(b.end));
+  const rows = ordered
+    .map(
+      (item) => `
+        <div class="schedule-row ${item.selected ? "is-selected" : "is-rejected"}">
+          <div class="schedule-label">
+            <span>${item.selected ? "✓ Selecionada" : "× Conflito"}</span>
+            <b>${escapeHtml(item.name)}</b>
+          </div>
+          <div class="track">
+            <div class="event" title="${escapeHtml(item.name)} — ${item.start}–${item.end}" style="${eventStyle(item, scale)}">
+              <b>${escapeHtml(item.name)}</b><span class="event-time">${item.start}–${item.end}</span>
+            </div>
+          </div>
+        </div>`,
+    )
+    .join("");
+
+  document.querySelector("#result").innerHTML = `
+    <div class="card result">
+      <h2>Solução ótima</h2>
+      <div class="metrics">
+        <div class="metric"><b>${result.selected.length}</b>selecionadas</div>
+        <div class="metric"><b>${result.rejected.length}</b>conflitos</div>
+        <div class="metric"><b>O(n log n)</b>complexidade</div>
+      </div>
+      <div class="timeline scheduling-timeline">
+        ${renderAxis(scale, 190)}
+        ${rows || '<p class="empty-state">Adicione solicitações para visualizar a agenda.</p>'}
+      </div>
+      <div class="note"><b>Escolha gulosa:</b> entre as solicitações compatíveis, priorizar a que termina primeiro deixa o maior espaço possível para as próximas aulas.</div>
+      <details><summary>Ver execução passo a passo</summary><div class="steps">${result.steps
+        .map((step) => `<div class="step">${escapeHtml(step)}</div>`)
+        .join("")}</div></details>
+    </div>`;
+}
+
+
 function about() {
   app.innerHTML = `
     <h1>Sobre o projeto</h1>
     <p class="lead">Uma aplicação didática para demonstrar algoritmos gulosos em um cenário universitário.</p>
     <div class="card">
       <h2>Objetivo</h2>
-      <p>O UniScheduler resolve o problema <b>Interval Partitioning</b>, que atende todas as aulas usando o menor número de salas.</p>
-      <p>O algoritmo ordena os intervalos e realiza escolhas gulosas. A interface permite editar casos, executar as soluções e acompanhar as decisões passo a passo.</p>
+      <p>O UniScheduler resolve dois problemas clássicos: <b>Interval Partitioning</b>, que atende todas as aulas usando o menor número de salas, e <b>Interval Scheduling</b>, que maximiza o número de aulas atendidas quando existe um único recurso.</p>
+      <p>Ambos ordenam os intervalos e realizam escolhas gulosas. A interface permite editar casos, executar as soluções e acompanhar as decisões passo a passo.</p>
       <h2>Complexidade</h2>
-      <p>O Partitioning ordena as aulas e atualiza uma min-heap em <b>O(n log n)</b>.</p>
+      <p>O Partitioning ordena as aulas e atualiza uma min-heap em <b>O(n log n)</b>. O Scheduling ordena as aulas em <b>O(n log n)</b> e as percorre uma vez.</p>
     </div>`;
 }
 

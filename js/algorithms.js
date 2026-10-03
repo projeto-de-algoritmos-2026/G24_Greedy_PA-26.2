@@ -100,6 +100,33 @@ class MinHeap {
   }
 }
 
+function intervalScheduling(items) {
+  const sorted = [...items].sort(
+    (a, b) => mins(a.end) - mins(b.end) || mins(a.start) - mins(b.start),
+  );
+  let lastEnd = -Infinity;
+  const selected = [];
+  const rejected = [];
+  const steps = [];
+
+  for (const item of sorted) {
+    // Invariante: as aulas selecionadas são compatíveis e lastEnd é o término da última delas.
+    if (mins(item.start) >= lastEnd) {
+      selected.push(item);
+      lastEnd = mins(item.end);
+      steps.push(
+        `✓ ${item.name} (${item.start}–${item.end}) selecionada: é compatível e termina cedo.`,
+      );
+    } else {
+      rejected.push(item);
+      steps.push(
+        `× ${item.name} (${item.start}–${item.end}) rejeitada por conflito com a última seleção.`,
+      );
+   }
+  } 
+  return { selected, rejected, steps };
+}
+
 function intervalPartitioning(items) {
   const sorted = [...items].sort(
     (a, b) => mins(a.start) - mins(b.start) || mins(a.end) - mins(b.end),
@@ -165,6 +192,7 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     clock,
     intervalPartitioning,
+    intervalScheduling,
     mins,
     peakConcurrency,
     validateItems,

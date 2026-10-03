@@ -23,6 +23,17 @@
       ]);
       test("Partitioning encontra duas salas", partitioning.rooms.length === 2);
       test("Partitioning aceita lista vazia", intervalPartitioning([]).rooms.length === 0);
+      const scheduling = intervalScheduling([
+        item("A", "08:00", "10:00"),
+        item("B", "08:30", "09:00"),
+        item("C", "09:00", "10:00"),
+        item("D", "10:00", "11:00"),
+      ]);
+      test("Scheduling seleciona três intervalos compatíveis", scheduling.selected.length === 3);
+      test(
+        "Scheduling aceita horários adjacentes",
+        intervalScheduling([item("A", "08:00", "09:00"), item("B", "09:00", "10:00")]).selected.length === 2,
+      );
 
       const peak = peakConcurrency([
         item("A", "08:00", "09:00"),
