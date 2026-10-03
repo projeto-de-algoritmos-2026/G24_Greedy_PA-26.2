@@ -7,9 +7,9 @@
 ▶ [Assista à demonstração do UniScheduler no YouTube](COLE_AQUI_O_LINK_DO_VIDEO)
 
 <p align="center">
-  <img src="docs/img/inicio.png" width="700"><br><br>
-  <img src="docs/img/alocacao-de-salas.png" width="700"><br><br>
-  <img src="docs/img/laboratorio-compartilhado.png" width="700">
+  <img src="img/inicio.png" width="700"><br><br>
+  <img src="img/alocacao-de-salas.png" width="700"><br><br>
+  <img src="img/laboratorio-compartilhado.png" width="700">
 </p>
 
 ---
@@ -58,7 +58,7 @@ não roda até a correção.
 
 ## Interval Partitioning
 
-[`intervalPartitioning`](js/algorithms.js#L103). Aloca **todas** as aulas usando o **menor número
+[`intervalPartitioning`](js/algorithms.js#L130). Aloca **todas** as aulas usando o **menor número
 de salas**.
 
 1. Ordena as aulas por horário de **início** (empate: término mais cedo primeiro).
@@ -89,7 +89,7 @@ igual à **profundidade** (o pico de aulas simultâneas), que é o limite inferi
 
 ### Certificado de otimalidade
 
-A interface não pede para acreditar na prova: [`peakConcurrency`](js/algorithms.js#L170) calcula a
+A interface não pede para acreditar na prova: [`peakConcurrency`](js/algorithms.js#L169) calcula a
 profundidade por uma **varredura independente** (sweep line). Cada aula vira dois eventos (`+1` no
 início e `-1` no fim), ordenados por horário, com os términos antes dos inícios no mesmo minuto.
 O maior valor acumulado é o pico, mostrado na tela como, por exemplo,
@@ -102,7 +102,7 @@ remoção e uma inserção na heap, em `O(log k)`, com `k ≤ n`.
 
 ## Interval Scheduling
 
-[`intervalScheduling`](js/algorithms.js#L140). Com **um único laboratório**, seleciona o **maior
+[`intervalScheduling`](js/algorithms.js#L103). Com **um único laboratório**, seleciona o **maior
 número possível** de aulas sem sobreposição.
 
 1. Ordena as solicitações por horário de **término** (empate: início mais cedo primeiro).
@@ -143,7 +143,7 @@ uma apresentação:
 | **Prova na tela** | certificado de pico de simultaneidade | explicação da escolha gulosa |
 | **Passo a passo** | sala criada ou reutilizada em cada aula | aula aceita ou rejeitada em cada passo |
 
-A escala da linha do tempo se ajusta aos horários informados ([`timelineScale`](js/app.js#L216)),
+A escala da linha do tempo se ajusta aos horários informados ([`timelineScale`](js/app.js#L217)),
 então aulas à noite ou bem cedo aparecem inteiras. Os nomes das disciplinas passam por
 [`escapeHtml`](js/app.js#L97) antes de entrar na página, e as aulas editadas ficam salvas no
 navegador (`localStorage`).
@@ -163,7 +163,7 @@ unischeduler/
 ├── tests/
 │   ├── algorithms.test.js        # Suíte Node: casos de borda e busca exaustiva
 │   └── test.html                 # Testes rápidos no navegador
-└── docs/img/                     # Capturas de tela usadas neste README
+└── img/                          # Capturas de tela usadas neste README
 ```
 
 > **Nota de projeto:** [`js/algorithms.js`](js/algorithms.js) não depende do navegador. As mesmas

@@ -7,9 +7,9 @@
 ▶ [Watch the UniScheduler demo on YouTube](COLE_AQUI_O_LINK_DO_VIDEO)
 
 <p align="center">
-  <img src="docs/img/inicio.png" width="700"><br><br>
-  <img src="docs/img/alocacao-de-salas.png" width="700"><br><br>
-  <img src="docs/img/laboratorio-compartilhado.png" width="700">
+  <img src="img/inicio.png" width="700"><br><br>
+  <img src="img/alocacao-de-salas.png" width="700"><br><br>
+  <img src="img/laboratorio-compartilhado.png" width="700">
 </p>
 
 > The interface is in Portuguese: **Alocação de Salas** = Room Allocation,
@@ -62,7 +62,7 @@ not run until it is fixed.
 
 ## Interval Partitioning
 
-[`intervalPartitioning`](js/algorithms.js#L103). Allocates **every** class using the **fewest
+[`intervalPartitioning`](js/algorithms.js#L130). Allocates **every** class using the **fewest
 rooms**.
 
 1. Sort the classes by **start** time (ties: earliest finish first).
@@ -93,7 +93,7 @@ simultaneous classes), which is the lower bound.
 
 ### Optimality certificate
 
-The interface does not ask you to trust the proof: [`peakConcurrency`](js/algorithms.js#L170)
+The interface does not ask you to trust the proof: [`peakConcurrency`](js/algorithms.js#L169)
 computes the depth with an **independent sweep line**. Each class becomes two events (`+1` at the
 start and `-1` at the end), sorted by time, with ends before starts at the same minute. The
 largest running total is the peak, shown on screen as, for example,
@@ -106,7 +106,7 @@ and one insertion in the heap, in `O(log k)`, with `k ≤ n`.
 
 ## Interval Scheduling
 
-[`intervalScheduling`](js/algorithms.js#L140). With **a single lab**, selects the **largest
+[`intervalScheduling`](js/algorithms.js#L103). With **a single lab**, selects the **largest
 possible number** of non-overlapping classes.
 
 1. Sort the requests by **finish** time (ties: earliest start first).
@@ -147,7 +147,7 @@ presentation:
 | **On-screen proof** | peak concurrency certificate | explanation of the greedy choice |
 | **Step by step** | room created or reused for each class | class accepted or rejected at each step |
 
-The timeline scale adapts to the given times ([`timelineScale`](js/app.js#L216)), so evening or
+The timeline scale adapts to the given times ([`timelineScale`](js/app.js#L217)), so evening or
 early classes are shown in full. Course names go through [`escapeHtml`](js/app.js#L97) before
 reaching the page, and edited classes are saved in the browser (`localStorage`).
 
@@ -166,7 +166,7 @@ unischeduler/
 ├── tests/
 │   ├── algorithms.test.js        # Node suite: edge cases and exhaustive search
 │   └── test.html                 # Quick tests in the browser
-└── docs/img/                     # Screenshots used in this README
+└── img/                          # Screenshots used in this README
 ```
 
 > **Design note:** [`js/algorithms.js`](js/algorithms.js) does not depend on the browser. The same
