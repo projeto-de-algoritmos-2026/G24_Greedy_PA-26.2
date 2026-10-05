@@ -4,7 +4,7 @@
 
 ## Vídeo de demonstração
 
-▶ [Assista à demonstração do UniScheduler no YouTube](COLE_AQUI_O_LINK_DO_VIDEO)
+▶ [Assista à demonstração do UniScheduler no YouTube](https://youtu.be/ERl4qzb7DY4?is=OCpVJoPbs3ISFI4F)
 
 <p align="center">
   <img src="img/inicio.png" width="700"><br><br>
